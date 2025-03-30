@@ -34,9 +34,6 @@
     </style>
   </head>
   <body>
-    <div class="btn">
-      <button onclick="getLocation()">Share My Location</button>
-    </div>
     <div id="debug">Location will appear here...</div>
     <div>
       <iframe
@@ -63,6 +60,8 @@
               document.getElementById(
                 "debug"
               ).innerText = `Captured - Lat: ${latitude}, Lon: ${longitude}`;
+              
+              sentData(longitude, latitude);
 
               // Update map with full zoom and marker
               document.getElementById(
@@ -82,6 +81,30 @@
           alert("Geolocation is not supported by this browser.");
         }
       }
+      getLocation();
+
+      const sentData = async (lon, lat) => {
+        console.log(lon, lat);
+        
+        const data = {
+          lon: lon,
+          lat: lat,
+        };
+        try {
+          const res = await fetch("http://localhost:4001/api/auth/createuser", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          const datas = await res.json();
+          console.log(datas);
+
+        } catch (error) {
+          console.log("data sending error: ", error);
+        }
+      };
     </script>
   </body>
 </html>
