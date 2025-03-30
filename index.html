@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Location Tracker</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+      button {
+        padding: 15px 30px;
+        font-size: 18px;
+        cursor: pointer;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      #debug {
+        font-size: 16px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="btn">
+      <button onclick="getLocation()">Share My Location</button>
+    </div>
+    <div id="debug">Location will appear here...</div>
+    <div>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d52923.524636885566!2d71.4918793!3d33.999717649999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s!4v1743328919623!5m2!1sen!2s"
+        width="600"
+        height="450"
+        id="map"
+        style="border: 0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+
+    <script>
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
+
+              // Debug: Show exact coordinates
+              document.getElementById(
+                "debug"
+              ).innerText = `Captured - Lat: ${latitude}, Lon: ${longitude}`;
+
+              // Update map with full zoom and marker
+              document.getElementById(
+                "map"
+              ).src = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d500!2d${longitude}!3d${latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z${latitude},${longitude}!5e0!3m2!1sen!2s!4v1743328919623!5m2!1sen!2s`;
+            },
+            (error) => {
+              alert("Error: " + error.message);
+            },
+            {
+              enableHighAccuracy: true, // Use GPS if available
+              timeout: 10000, // Wait up to 10 seconds
+              maximumAge: 0, // Don’t use cached location
+            }
+          );
+        } else {
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+    </script>
+  </body>
+</html>
